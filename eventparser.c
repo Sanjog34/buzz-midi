@@ -1,7 +1,7 @@
 
 #include<stdio.h>
 #include"eventparser.h"
-#include"helper.c"
+#include"helper.h"
 #include<string.h>
 
 

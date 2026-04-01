@@ -3,6 +3,7 @@
 #include<string.h>
 #include<stdint.h>
 #include"headerparse.h"
+#include"eventparser.h"
 
 typedef enum{
 	DELTA_TIME,
@@ -20,9 +21,6 @@ int main(int argc, char*argv[]){
     return 1;
     }
 
-
-	char trackid[4];
-	uint32_t tracklenght;
 	midiheader header;
 	FILE *ptr=fopen(argv[1],"r");
 	
@@ -33,6 +31,19 @@ int main(int argc, char*argv[]){
 	getheaderinfo(&header, ptr);
 	printheadervalue(&header);
 	checkcompatability(&header);
+
+//--------------------track-chunk-------------------------------------------------
+	GetTrackId(ptr);
+	GetTrackLenght(ptr);
+	printf("Track Id, id:%s",trackid);
+	printf("track length: %d",tracklength);
+
+
+
+	if(!CheckTrackid()){
+		printf("Invalid Track Id, id:%s",trackid);
+		return 1;
+	}
 
 	//get timings right
 	//parse systemevents

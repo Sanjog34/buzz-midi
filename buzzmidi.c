@@ -31,6 +31,11 @@ int main(int argc, char*argv[]){
 	printheadervalue(&header);
 	checkcompatability(&header);
 
+	//get timings right
+	//parse systemevents
+	//event type
+	
+
 
     
 

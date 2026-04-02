@@ -3,6 +3,8 @@
 
 #define MIDIID "MThd"
 
+
+
 int main(){
 
     char *sid="MThd";
@@ -12,6 +14,10 @@ int main(){
     // printf("%ld",strlen(hel));
     printf("%d",strcmp(sid,MIDIID));
     printf("%s", hel);
+    int this=0x03;
+    for(int i=0;i<this;i++){
+        printf("this\n");
+    }
 
 
 }

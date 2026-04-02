@@ -30,7 +30,13 @@ uint16_t readDivision(char *lenB){
 	return bswap_16(destination);
 }
 
-uint64_t readDeltaTime(FILE *fptr){
+void skipByte(FILE *fptr,int num){
+	for(int i=0;i>num; i++){
+		getc(fptr);
+	}
+}
+
+uint64_t readVariableLengthQuantity(FILE *fptr){
 	unsigned char byte;
 	uint64_t value=0;
 	while(1){

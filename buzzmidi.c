@@ -42,11 +42,10 @@ int main(int argc, char*argv[]){
 	}
 
 
-	//get timings right
-	//parse systemevents
-	//event type
-
-
+	while(1){
+		readDelta_time(ptr, header.division);
+		handle_event(getc(ptr), ptr);
+	}
 
     
 

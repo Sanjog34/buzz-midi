@@ -7,6 +7,9 @@
 
 char trackid[5];
 uint32_t tracklength;
+int time;
+int tempo=500000;
+int instrument;
 
 
 void GetTrackId(FILE *ptr){
@@ -27,4 +30,50 @@ int CheckTrackid(){
     return 1;
 }
 
+void readDeltatime(FILE *ptr,int division){
+    int tempo_in_sec=tempo/1000000;
+    int tick = tempo_in_sec/division;
+    time=tick*readVariableLengthQuantity(ptr);
+}
 
+
+
+void meta_events(FILE *ptr){
+    int length;
+    if(getc(ptr)==TEMPO_TYPE){
+        int temp_tempo;
+        length=getc(ptr);
+        memcpy(temp_tempo,readbytes(length,ptr),length);
+        tempo=temp_tempo;
+    }
+    else{
+        length=getc(ptr);
+        skipBytes(ptr,length);
+    }
+}
+
+
+
+
+void handle_event(unsigned char ch,FILE *ptr){
+    switch (ch)
+    {
+    case META_EVENTS:
+        meta_events(ptr);
+        break;
+    case INSTRU_EVENT:
+        instrument=getc(ptr);
+        break;
+    case NOTEOFF_EVENT:
+        
+        
+        
+        break;
+    case NOTEON_EVENT:
+
+    default:
+    int length=getc(ptr);
+    skipBytes(ptr,length);
+        break;
+    }
+}

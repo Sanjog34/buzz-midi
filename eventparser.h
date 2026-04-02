@@ -1,6 +1,7 @@
 #ifndef EVENTPARSER
 #define EVENTPARSER
 #include<stdio.h>
+#include<stdlib.h>
 #include<stdint.h>
 #include<string.h>
 
@@ -13,12 +14,20 @@
 
 extern char trackid[5];
 extern uint32_t tracklength;
+extern int time;
+extern int tempo;
+extern int instrument;
 
 
 void GetTrackId(FILE *ptr);
 void GetTrackLength(FILE *ptr);
-
 int CheckTrackid();
+
+void readDeltatime(FILE *ptr, int division);
+void handle_event(unsigned char ch, FILE *ptr);
+void meta_events(FILE *ptr);
+
+
 
 
 #endif

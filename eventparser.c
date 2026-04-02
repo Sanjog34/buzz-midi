@@ -5,6 +5,8 @@
 #include<string.h>
 
 
+char trackid[4];
+uint32_t tracklength;
 
 
 void GetTrackId(FILE *ptr){

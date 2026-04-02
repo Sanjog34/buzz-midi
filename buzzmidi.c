@@ -32,7 +32,7 @@ int main(int argc, char*argv[]){
 	printheadervalue(&header);
 	checkcompatability(&header);
 
-//--------------------track-chunk-------------------------------------------------
+//-------------------------------------------track-chunk-------------------------------------------------//
 	GetTrackId(ptr);
 	GetTrackLenght(ptr);
 	printf("Track Id, id:%s",trackid);

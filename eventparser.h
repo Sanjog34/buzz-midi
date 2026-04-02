@@ -21,6 +21,4 @@ void GetTrackLenght(FILE *ptr);
 int CheckTrackid();
 
 
-
-
 #endif

@@ -9,8 +9,8 @@
 #define TRACK_ID "MTrk"
 #define TEMPO_TYPE 0x51
 #define META_EVENTS 0xFF
-#define NOTEON_EVENT 0x80
-#define NOTEOFF_EVENT 0x90
+#define NOTEON_EVENT 0x90
+#define NOTEOFF_EVENT 0x80
 #define INSTRU_EVENT 0xC0
 #define BREAK_TYPE 0x2F
 

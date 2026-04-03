@@ -113,10 +113,14 @@ void compare_bars(FILE *f){
     }
     else if (previous_bar.event_type==NOTEOFF_EVENT && current_bar.event_type==NOTEON_EVENT)
     {
+        
         if(delay_flag && time>0){
+            
+            
             accummulated_time=accummulated_time+time; //acc=acc+t
             fprintf(f,"buzzit( %f , 0 );\n",1000*accummulated_time); //set_delay acc time
             accummulated_time=0;//acc=04
+            delay_flag=false;
             
         }
         swap();

@@ -3,17 +3,17 @@
 #include"eventparser.h"
 #include"helper.h"
 #include<string.h>
+#include<math.h>
 #include<stdbool.h>
 
 
 char trackid[5];
 uint32_t tracklength;
-int time;
+float time;
 int tempo=500000;
 int instrument;
 int accummulated_time=0;
-bool delay_flag;
-
+bool delay_flag=false;
 bar current_bar;
 bar previous_bar;
 
@@ -36,7 +36,7 @@ int CheckTrackid(){
 
 void readDeltatime(FILE *ptr,int division){
     int tempo_in_sec=tempo/1000000;
-    int tick = tempo_in_sec/division;
+    float tick = tempo_in_sec/division;
     time=tick*readVariableLengthQuantity(ptr);
 }
 
@@ -57,6 +57,14 @@ void meta_events(FILE *ptr){
 }
 
 
+void init_previous_bar(){
+    previous_bar.time_since_previous_event=0.0;
+    previous_bar.event_type=NOTEON_EVENT;
+    previous_bar.note=0;
+    previous_bar.velocity=0;
+}
+
+
 void build_current_bar(FILE *ptr, unsigned char event){
     current_bar.time_since_previous_event=time;
     current_bar.event_type=event;
@@ -65,23 +73,31 @@ void build_current_bar(FILE *ptr, unsigned char event){
 }
 
 
-void compare_bars(){
+void swap(){
+    previous_bar.event_type=current_bar.event_type;
+    previous_bar.note=current_bar.note;
+    previous_bar.time_since_previous_event=current_bar.time_since_previous_event;
+    previous_bar.velocity=current_bar.velocity;
+}
+
+
+void compare_bars(FILE *f){
     if(previous_bar.event_type==NOTEON_EVENT && current_bar.event_type==NOTEON_EVENT){
-        //acc=acc+t
-        //take previous note
-        //take acc time
-        //acc=0
-        //swap
+        accummulated_time=accummulated_time+time;// acc=acc+t
+        float analog_value=440*pow(2.0,(previous_bar.note-69)/12.0);    //take previous note and convert
+        fprintf(f,"buzzit( %f , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
+        accummulated_time=0;   //acc=0
+        //swap();
     }
     else if (previous_bar.event_type==NOTEON_EVENT && current_bar.event_type==NOTEOFF_EVENT)
     {
         if(previous_bar.note==current_bar.note){
-            delay_flag=true;
-            //acc=acc+t
-            //store previous note
-            //store acc time 
-            //acc=0
-            //active delay flag
+            accummulated_time=accummulated_time+time;//acc=acc+t
+            float analog_value=440*pow(2.0,(previous_bar.note-69)/12.0);    //take previous note and convert
+            fprintf(f,"buzzit( %f , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
+            accummulated_time=0;//acc=0
+            delay_flag=true; //active delay flag
+            //swap();
         }
         else{
             //acc time
@@ -91,27 +107,16 @@ void compare_bars(){
     else if (previous_bar.event_type==NOTEOFF_EVENT && current_bar.event_type==NOTEON_EVENT)
     {
         if(delay_flag && time>0){
-            //set_delay
-        }
-        else{
-            //accumulate time
-            accummulated_time=accummulated_time+time;
-            //take previous note and accumulated time
-            //acc=0
-            //swap
+            accummulated_time=accummulated_time+time; //acc=acc+t
+            fprintf(f,"buzzit( %f , 0 );\n",1000*accummulated_time); //set_delay acc time
+            accummulated_time=0;//acc=04
+            //swap();
         }
     }
-    else if (previous_bar.event_type==NOTEOFF_EVENT && current_bar.event_type==NOTEOFF_EVENT)
-    {
-        //no case
-    }
     
-    
-    
-
 }
 
-void handle_event(unsigned char ch,FILE *ptr){
+void handle_event(unsigned char ch,FILE *ptr, FILE *f){
     switch (ch)
     {
     case META_EVENTS:
@@ -122,12 +127,12 @@ void handle_event(unsigned char ch,FILE *ptr){
         break;
     case NOTEOFF_EVENT:
         build_current_bar(ptr,NOTEOFF_EVENT);
-        compare_bars();
+        compare_bars(f);
         
         break;
     case NOTEON_EVENT:
         build_current_bar(ptr,NOTEON_EVENT);
-        compare_bars();
+        compare_bars(f);
 
         break;
 

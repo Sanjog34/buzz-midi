@@ -20,11 +20,12 @@ extern int instrument;
 
 typedef struct
 {
-    int time_since_previous_event;
+    float time_since_previous_event;
     int note;
     int velocity;
     char event_type;
 }bar;
+
 
 
 void GetTrackId(FILE *ptr);
@@ -32,10 +33,13 @@ void GetTrackLength(FILE *ptr);
 int CheckTrackid();
 
 void readDeltatime(FILE *ptr, int division);
-void handle_event(unsigned char ch, FILE *ptr);
+void handle_event(unsigned char ch, FILE *ptr,FILE *f);
 void meta_events(FILE *ptr);
 
-void build_current_bar(FILE *ptr);
+void init_previous_bar();
+void build_current_bar(FILE *ptr,unsigned char);
+void compare_bars(FILE *f);
+void swap();
 
 
 

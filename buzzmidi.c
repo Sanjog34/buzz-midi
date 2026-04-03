@@ -5,16 +5,10 @@
 #include"headerparse.h"
 #include"eventparser.h"
 
-typedef enum{
-	DELTA_TIME,
-	STATUS_CODE,
-	NOTE,
-	VELOCITY
-}ParsingState;
 
-ParsingState pstate;
 
 int main(int argc, char*argv[]){
+
 
 	if(argc!=2){ // argument check
         printf("Usage is: midiparser filename");
@@ -23,6 +17,9 @@ int main(int argc, char*argv[]){
 
 	midiheader header;
 	FILE *ptr=fopen(argv[1],"r");
+
+	FILE *f = fopen("output.txt", "w");
+	
 	
 	if(ptr==NULL){ //file check
         printf("Invalid File");
@@ -36,6 +33,8 @@ int main(int argc, char*argv[]){
 	GetTrackId(ptr);
 	GetTrackLength(ptr);
 
+	init_previous_bar();
+	
 	if(!CheckTrackid()){
 		printf("Invalid Track Id, id:%s\n",trackid);
 		return 1;
@@ -44,7 +43,7 @@ int main(int argc, char*argv[]){
 
 	while(1){
 		readDelta_time(ptr, header.division);
-		handle_event(getc(ptr), ptr);
+		handle_event(getc(ptr), ptr, f);
 	}
 
     

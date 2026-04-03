@@ -41,7 +41,6 @@ void readDeltatime(FILE *ptr,int division){
     float tick = tempo_in_sec/division;
     uint64_t vlq=readVariableLengthQuantity(ptr);
     time=tick*vlq;
-    printf("\ntime %f\n",time);
 }
 
 
@@ -145,6 +144,7 @@ void handle_event(unsigned char ch,FILE *ptr, FILE *f){
         
         break;
     case NOTEON_EVENT:
+        printf("\ntime %f\n",time);
         
         build_current_bar(ptr,NOTEON_EVENT);
         compare_bars(f);

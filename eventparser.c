@@ -12,7 +12,7 @@ uint32_t tracklength;
 float time;
 int tempo=500000;
 int instrument;
-int accummulated_time=0;
+float accummulated_time=0;
 bool delay_flag=false;
 bool break_flag=false;
 bar current_bar;
@@ -28,9 +28,7 @@ void GetTrackLength(FILE *ptr){
 
 int CheckTrackid(){
     if(strcmp(trackid,TRACK_ID) != 0){
-       
         return 0;
-        
     }
     return 1;
 }
@@ -94,7 +92,7 @@ void compare_bars(FILE *f){
     if(previous_bar.event_type==NOTEON_EVENT && current_bar.event_type==NOTEON_EVENT){
         accummulated_time=accummulated_time+time;// acc=acc+t
         float analog_value=440*pow(2.0,(previous_bar.note-69)/12.0);    //take previous note and convert
-        fprintf(f,"buzzit( %d , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
+        fprintf(f,"buzzit( %f , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
         accummulated_time=0;   //acc=0
         swap();
     }
@@ -103,7 +101,7 @@ void compare_bars(FILE *f){
         if(previous_bar.note==current_bar.note){
             accummulated_time=accummulated_time+time;//acc=acc+t
             float analog_value=440*pow(2.0,(previous_bar.note-69)/12.0);    //take previous note and convert
-            fprintf(f,"buzzit( %d , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
+            fprintf(f,"buzzit( %f , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
             accummulated_time=0;//acc=0
             delay_flag=true; //active delay flag
             swap();
@@ -117,7 +115,7 @@ void compare_bars(FILE *f){
     {
         if(delay_flag && time>0){
             accummulated_time=accummulated_time+time; //acc=acc+t
-            fprintf(f,"buzzit( %d , 0 );\n",1000*accummulated_time); //set_delay acc time
+            fprintf(f,"buzzit( %f , 0 );\n",1000*accummulated_time); //set_delay acc time
             accummulated_time=0;//acc=04
             
         }
@@ -143,8 +141,6 @@ void handle_event(unsigned char ch,FILE *ptr, FILE *f){
         
         break;
     case NOTEON_EVENT:
-        
-        
         build_current_bar(ptr,NOTEON_EVENT);
         compare_bars(f);
 

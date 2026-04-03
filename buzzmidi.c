@@ -32,14 +32,14 @@ int main(int argc, char*argv[]){
 //-------------------------------------------track-chunk-------------------------------------------------//
 	GetTrackId(ptr);
 	GetTrackLength(ptr);
-
+   
 	init_previous_bar();
-
+	
 	if(!CheckTrackid()){
 		printf("Invalid Track Id, id:%s\n",trackid);
 		return 1;
 	}
-
+	 
 
 	while(1){
 		readDeltatime(ptr, header.division);
@@ -48,9 +48,11 @@ int main(int argc, char*argv[]){
 			break;
 		}
 	}
+	
 
 	free(ptr);
 	free(f);
+	
 
 
 return 0;

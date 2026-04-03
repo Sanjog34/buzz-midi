@@ -36,23 +36,28 @@ int CheckTrackid(){
 }
 
 void readDeltatime(FILE *ptr,int division){
-    int tempo_in_sec=tempo/1000000;
+   
+    float tempo_in_sec=tempo/1000000;
     float tick = tempo_in_sec/division;
-    time=tick*readVariableLengthQuantity(ptr);
+    uint64_t vlq=readVariableLengthQuantity(ptr);
+    time=tick*vlq;
+    printf("\ntime %f\n",time);
 }
 
 
 
 void meta_events(FILE *ptr){
+    
     int length;
     unsigned char type=getc(ptr);
-    if(type==TEMPO_TYPE){
+    if(type==TEMPO_TYPE){ 
         int temp_tempo;
         length=getc(ptr);
         memcpy(&temp_tempo,readbytes(length,ptr),length);
         tempo=temp_tempo;
     }
     else if(type==BREAK_TYPE){
+        
         break_flag=true;
     }
     else{
@@ -115,8 +120,9 @@ void compare_bars(FILE *f){
             accummulated_time=accummulated_time+time; //acc=acc+t
             fprintf(f,"buzzit( %d , 0 );\n",1000*accummulated_time); //set_delay acc time
             accummulated_time=0;//acc=04
-            swap();
+            
         }
+        swap();
     }
     
 }
@@ -128,14 +134,18 @@ void handle_event(unsigned char ch,FILE *ptr, FILE *f){
         meta_events(ptr);
         break;
     case INSTRU_EVENT:
+      
         instrument=getc(ptr);
+        
         break;
     case NOTEOFF_EVENT:
+    
         build_current_bar(ptr,NOTEOFF_EVENT);
         compare_bars(f);
         
         break;
     case NOTEON_EVENT:
+        
         build_current_bar(ptr,NOTEON_EVENT);
         compare_bars(f);
 

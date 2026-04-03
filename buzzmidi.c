@@ -42,12 +42,13 @@ int main(int argc, char*argv[]){
 
 
 	while(1){
-		readDelta_time(ptr, header.division);
+		readDeltatime(ptr, header.division);
 		handle_event(getc(ptr), ptr, f);
 		if(break_flag){
 			break;
 		}
 	}
+
 	free(ptr);
 	free(f);
 

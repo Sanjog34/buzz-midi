@@ -30,7 +30,7 @@ uint16_t readDivision(char *lenB){
 	return bswap_16(destination);
 }
 
-void skipByte(FILE *fptr,int num){
+void skipBytes(FILE *fptr,int num){
 	for(int i=0;i>num; i++){
 		getc(fptr);
 	}

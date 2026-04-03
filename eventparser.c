@@ -49,7 +49,7 @@ void meta_events(FILE *ptr){
     if(type==TEMPO_TYPE){
         int temp_tempo;
         length=getc(ptr);
-        memcpy(temp_tempo,readbytes(length,ptr),length);
+        memcpy(&temp_tempo,readbytes(length,ptr),length);
         tempo=temp_tempo;
     }
     else if(type==BREAK_TYPE){
@@ -90,19 +90,19 @@ void compare_bars(FILE *f){
     if(previous_bar.event_type==NOTEON_EVENT && current_bar.event_type==NOTEON_EVENT){
         accummulated_time=accummulated_time+time;// acc=acc+t
         float analog_value=440*pow(2.0,(previous_bar.note-69)/12.0);    //take previous note and convert
-        fprintf(f,"buzzit( %f , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
+        fprintf(f,"buzzit( %d , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
         accummulated_time=0;   //acc=0
-        //swap();
+        swap();
     }
     else if (previous_bar.event_type==NOTEON_EVENT && current_bar.event_type==NOTEOFF_EVENT)
     {
         if(previous_bar.note==current_bar.note){
             accummulated_time=accummulated_time+time;//acc=acc+t
             float analog_value=440*pow(2.0,(previous_bar.note-69)/12.0);    //take previous note and convert
-            fprintf(f,"buzzit( %f , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
+            fprintf(f,"buzzit( %d , %f );\n",1000*accummulated_time,analog_value);//take acc time in ms
             accummulated_time=0;//acc=0
             delay_flag=true; //active delay flag
-            //swap();
+            swap();
         }
         else{
             //acc time
@@ -113,9 +113,9 @@ void compare_bars(FILE *f){
     {
         if(delay_flag && time>0){
             accummulated_time=accummulated_time+time; //acc=acc+t
-            fprintf(f,"buzzit( %f , 0 );\n",1000*accummulated_time); //set_delay acc time
+            fprintf(f,"buzzit( %d , 0 );\n",1000*accummulated_time); //set_delay acc time
             accummulated_time=0;//acc=04
-            //swap();
+            swap();
         }
     }
     

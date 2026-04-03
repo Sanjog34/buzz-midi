@@ -16,7 +16,7 @@
 
 extern char trackid[5];
 extern uint32_t tracklength;
-extern int time;
+extern float time;
 extern int tempo;
 extern int instrument;
 extern bool delay_flag;

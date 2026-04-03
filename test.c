@@ -11,8 +11,6 @@ typedef struct
 }test;
 
 
-
-
 int main(){
     test t[100];
     t[1].delay=100;

@@ -34,7 +34,7 @@ int main(int argc, char*argv[]){
 	GetTrackLength(ptr);
 
 	init_previous_bar();
-	
+
 	if(!CheckTrackid()){
 		printf("Invalid Track Id, id:%s\n",trackid);
 		return 1;
@@ -44,10 +44,10 @@ int main(int argc, char*argv[]){
 	while(1){
 		readDelta_time(ptr, header.division);
 		handle_event(getc(ptr), ptr, f);
+		if(break_flag){
+			break;
+		}
 	}
-
-    
-
 
 
 return 0;

@@ -14,6 +14,7 @@ int tempo=500000;
 int instrument;
 int accummulated_time=0;
 bool delay_flag=false;
+bool break_flag=false;
 bar current_bar;
 bar previous_bar;
 
@@ -44,11 +45,15 @@ void readDeltatime(FILE *ptr,int division){
 
 void meta_events(FILE *ptr){
     int length;
-    if(getc(ptr)==TEMPO_TYPE){
+    unsigned char type=getc(ptr);
+    if(type==TEMPO_TYPE){
         int temp_tempo;
         length=getc(ptr);
         memcpy(temp_tempo,readbytes(length,ptr),length);
         tempo=temp_tempo;
+    }
+    else if(type==BREAK_TYPE){
+        break_flag=true;
     }
     else{
         length=getc(ptr);

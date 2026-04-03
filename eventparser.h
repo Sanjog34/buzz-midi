@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
+#include<stdbool.h>
 #include<string.h>
 
 #define TRACK_ID "MTrk"
@@ -11,12 +12,15 @@
 #define NOTEON_EVENT 0x80
 #define NOTEOFF_EVENT 0x90
 #define INSTRU_EVENT 0xC0
+#define BREAK_TYPE 0x2F
 
 extern char trackid[5];
 extern uint32_t tracklength;
 extern int time;
 extern int tempo;
 extern int instrument;
+extern bool delay_flag;
+extern bool break_flag;
 
 typedef struct
 {

@@ -9,22 +9,37 @@
 
 int main(int argc, char*argv[]){
 
-
 	if(argc!=2){ // argument check
         printf("Usage is: midiparser filename");
     return 1;
     }
 
 	midiheader header;
-	FILE *ptr=fopen(argv[1],"r");
 
-	FILE *f = fopen("output.txt", "w");
-	
-	
+	char *filename = argv[1];
+	char *slash = strrchr(filename, '/');
+	if (slash) filename = slash + 1;
+
+	// Strip .mid extension
+	char basename[256];
+	strncpy(basename, filename, sizeof(basename) - 1);
+	char *dot = strrchr(basename, '.');
+	if (dot) *dot = '\0';
+
+	// Build output path
+	char outpath[512];
+	snprintf(outpath, sizeof(outpath), "converted/%s.txt", basename);
+
+
+	FILE *ptr=fopen(argv[1],"r");
+	FILE *f = fopen(outpath, "w");
+
 	if(ptr==NULL){ //file check
         printf("Invalid File");
         return 1;
     }
+
+//-------------------------------------------header-chunk-------------------------------------------------//
 	getheaderinfo(&header, ptr);
 	printheadervalue(&header);
 	checkcompatability(&header);
@@ -40,7 +55,7 @@ int main(int argc, char*argv[]){
 		return 1;
 	}
 	 
-
+//---------------------------------------------event-parser-----------------------------------------------//
 	while(1){
 		readDeltatime(ptr, header.division);
 		handle_event(getc(ptr), ptr, f);

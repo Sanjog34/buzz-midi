@@ -65,10 +65,6 @@ int main(int argc, char*argv[]){
 	}
 	
 
-	free(ptr);
-	free(f);
-	
-
 
 return 0;
 }

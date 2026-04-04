@@ -32,7 +32,7 @@ uint16_t readDivision(char *lenB){
 
 void skipBytes(FILE *fptr,int num){
 	for(int i=0;i<num; i++){
-		unsigned char ch=getc(fptr);
+		getc(fptr);
 		// printf("\ntracklength %c\n",ch);
 	}
 	
@@ -43,7 +43,7 @@ uint64_t readVariableLengthQuantity(FILE *fptr){
 	uint64_t value=0;
 	while(1){
 	byte=getc(fptr);
-        value=value | byte & 0x7F;
+        value=value | (byte & 0x7F);
 	if(byte & 0x80){
           value= value << 7;
 	}

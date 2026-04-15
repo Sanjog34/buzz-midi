@@ -244,4 +244,10 @@ void make_header(FILE *f1)
     }
     fprintf(f1, "};");
     printf("\ndone making header\n");
+     while (note != NULL) {
+        temp = note;        
+        note = note->next;  
+        free(temp);         
+    printf("freed allocated memory\n");
+    }
 }
